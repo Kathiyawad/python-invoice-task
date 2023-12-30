@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <title>Invoice</title>
+  </head>
+  <body>
+        <section class="" style="background-color: #eee;">
+        <div class="container">
+          <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-lg-12 col-xl-11">
+              <div class="card text-black" style="border-radius: 25px;">
+                <div class="card-body">
+                  <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Invoice</p>
+                      
+                      <form class="mx-1 mx-md-4" method="POST" novalidate> {% csrf_token %}
+                        {{form.non_field_errors}}
+                        {% for i in invoice %}
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <label class="form-label" for="form3Example1c">
+                              {{i.label_tag}}</label>
+                              {{i}}
+                              <span class="errorlist text-danger"> {{i.errors|striptags}} </span>
+                          </div>
+                        </div>
+                        {% endfor %}
+                        {% for i in invoiceDetail %}
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <label class="form-label" for="form3Example1c">
+                              {{i.label_tag}}</label>
+                              {{i}}
+                              <span class="errorlist text-danger"> {{i.errors|striptags}} </span>
+                          </div>
+                        </div>
+
+                        {% endfor %}
+                        {% comment %} {{invoice.as_p}} {% endcomment %}
+                        {% comment %} {{invoiceDetail.as_p}} {% endcomment %}
+                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                          <input type="submit" value="submit" class="btn btn-primary btn-lg">
+                        </div>
+                      </form>
+
+{% comment %} <form method="POST">{% csrf_token %}
+    {{form.as_p}}
+    <input type='submit' value='submit'>
+</form> {% endcomment %}
+
+</center>
+<hr/>
+<center>
+{% if messages %}
+            {% for i in messages %}
+                {{i}}
+            {% endfor %}
+{% endif %}
+
+<hr/>
+<h4>Added Data</h4>
+<table>
+{% if data %}
+<div class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table class="table table_template darklinks" id="timetable" border="1">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Invoice</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Unitprice</th>
+              <th>Price</th>
+              <th>Edit</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in data %}
+            <tr>
+                <td>{{i.id}}</td>
+                <td>{{i.invoice}}</td>
+                <td>{{i.description}}</td>
+                <td>{{i.quantity}}</td>
+                <td>{{i.unitprice}}</td>
+                <td>{{i.price}}</td>
+                <td><a href="{% url 'update' i.id %}"><button class="btn btn-primary">Edit</button></a></td>
+                <td><a href="{% url 'remove' i.id %}"><button class="btn btn-danger">Delete</button></a></td>
+            </td>
+        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+</div>
+{% endif %}
+</center>
+<script>
+  // Get the input elements by targeting their id:
+  const txtquantity = document.getElementById('id_quantity');
+  const txtunitprice = document.getElementById('id_unitprice');
+  const txtprice = document.getElementById('id_price');
+
+  // Create variables for what the user inputs, and the output:
+  let quantity = 0;
+  let unitprice = 0;
+  let price = 0;
+
+  // Add an event listener to 'listen' to what the user types into the inputs:
+  txtquantity.addEventListener('input', e => {
+    quantity = e.target.value;
+    updatePrice()
+  });
+  txtunitprice.addEventListener('input', e => {
+    unitprice = e.target.value;
+    updatePrice()
+  });
+
+  // Update the value of net based on what the user inputs in for gross and tier
+  function updatePrice(e) {
+      price = quantity * unitprice;
+      txtprice.value = price;
+  }
+</script>
